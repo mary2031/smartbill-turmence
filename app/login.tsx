@@ -9,32 +9,39 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '@/context/AuthContext';
-import * as Haptics from 'expo-haptics';
+import { router } from 'expo-router';
 
 export default function Login() {
-  const [email, setEmail] = useState('demo@example.com');
-  const [password, setPassword] = useState('password');
+  const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
 
-  const handleSignIn = async () => {
-    // Web däl platformalarda haptic bildiriş beriň
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-    
+  const handleSubmit = async () => {
     setIsLoading(true);
-    
-    // API jaňyny simulýasiýa ediň
-    setTimeout(() => {
-      signIn();
+    try {
+      if (isLogin) {
+        await signIn(email, password);
+      } else {
+        if (!name) {
+          Alert.alert('Error', 'Please enter your name');
+          return;
+        }
+        await signUp(name, email, password);
+      }
+    } catch (error) {
+      Alert.alert('Error', error instanceof Error ? error.message : 'Authentication failed');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -46,18 +53,32 @@ export default function Login() {
         <SafeAreaView style={styles.innerContainer}>
           <View style={styles.logoContainer}>
             <Image 
-              source={{ uri: 'https://images.pexels.com/photos/3943716/pexels-photo-3943716.jpeg?auto=compress&cs=tinysrgb&w=400' }} 
+              source={{ uri: 'https://images.pexels.com/photos/7621138/pexels-photo-7621138.jpeg?auto=compress&cs=tinysrgb&w=400' }} 
               style={styles.logo}
             />
             <Text style={styles.logoText}>SmartBill</Text>
           </View>
           
           <View style={styles.formContainer}>
-            <Text style={styles.heading}>Hoş geldiniz</Text>
+            <Text style={styles.heading}>{isLogin ? 'Hoş geldiňiz' : 'Hasap döret'}</Text>
             <Text style={styles.subHeading}>
-              Ýerleşim we utilities sanawlaryny dolandyrmak üçin giriň
+              {isLogin 
+                ? 'Ýerleşim we utilities sanawlaryny dolandyrmak üçin giriň'
+                : 'Täze hasap döredip bilersiňiz'}
             </Text>
             
+            {!isLogin && (
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Adyňyz</Text>
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                  placeholder="Adyňyzy giriziň"
+                />
+              </View>
+            )}
+
             <View style={styles.inputContainer}>
               <Text style={styles.label}>E-poçta</Text>
               <TextInput
@@ -81,27 +102,36 @@ export default function Login() {
               />
             </View>
             
-            <TouchableOpacity style={styles.forgotPassword}>
-              <Text style={styles.forgotPasswordText}>Paroly ýatdan çykardyňyzmy?</Text>
-            </TouchableOpacity>
+            {isLogin && (
+              <TouchableOpacity style={styles.forgotPassword}>
+                <Text style={styles.forgotPasswordText}>Paroly ýatdan çykardyňyzmy?</Text>
+              </TouchableOpacity>
+            )}
             
             <TouchableOpacity 
               style={styles.signInButton}
-              onPress={handleSignIn}
+              onPress={handleSubmit}
               disabled={isLoading}
             >
               {isLoading ? (
                 <ActivityIndicator color="#ffffff" />
               ) : (
-                <Text style={styles.signInButtonText}>Girmek</Text>
+                <Text style={styles.signInButtonText}>
+                  {isLogin ? 'Girmek' : 'Hasap döret'}
+                </Text>
               )}
             </TouchableOpacity>
             
-            <View style={styles.demoNote}>
-              <Text style={styles.demoNoteText}>
-                Bu demo programmasydyr. Girip bolmak üçin önceden doldurylan maglumatlary ulanyň.
+            <TouchableOpacity 
+              style={styles.toggleButton}
+              onPress={() => setIsLogin(!isLogin)}
+            >
+              <Text style={styles.toggleButtonText}>
+                {isLogin 
+                  ? 'Hasabyňyz ýokmy? Hasap döret'
+                  : 'Hasabyňyz barmy? Giriň'}
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </ScrollView>
@@ -127,19 +157,19 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     borderRadius: 20,
   },
   logoText: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '700',
     color: '#3498db',
-    marginTop: 12,
+    marginTop: 16,
   },
   formContainer: {
     backgroundColor: '#ffffff',
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -198,16 +228,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  demoNote: {
-    marginTop: 24,
-    backgroundColor: '#f8f9fa',
-    padding: 12,
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#3498db',
+  toggleButton: {
+    marginTop: 16,
+    alignItems: 'center',
   },
-  demoNoteText: {
+  toggleButtonText: {
+    color: '#3498db',
     fontSize: 14,
-    color: '#7f8c8d',
+    fontWeight: '600',
   },
 });
