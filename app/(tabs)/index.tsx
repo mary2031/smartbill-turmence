@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useState, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/AuthContext';
 import { router } from 'expo-router';
@@ -8,13 +9,23 @@ import QuickActionButton from '@/components/QuickActionButton';
 import RecentTransactionCard from '@/components/RecentTransactionCard';
 import AlertBanner from '@/components/AlertBanner';
 import { getBills, getRecentTransactions } from '@/utils/mockData';
-import { Bell, CreditCard, History, Settings } from 'lucide-react-native';
+import { Bell, CreditCard, History, Settings, Gauge, TrendingUp, Wallet } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const [refreshing, setRefreshing] = useState(false);
+  const [showStats, setShowStats] = useState(true);
   const upcomingBills = getBills().filter(bill => !bill.isPaid).slice(0, 2);
   const recentTransactions = getRecentTransactions().slice(0, 3);
   
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Simulate data refresh
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1500);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <DashboardHeader user={user} />
@@ -23,13 +34,15 @@ export default function HomeScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <AlertBanner 
-          message="Siziň elektrik tölegiňiz 3 günüň içinde ödenmeli " 
+          message="Siziň elektrik tölegiňiz 3 günüň içinde ödenmeli" 
           type="warning"
         />
         
-        {/* Hasap Summary (Güneş Energiýasy) */}
         <View style={styles.summaryCard}>
           <Text style={styles.summaryTitle}>Jemi Töleg</Text>
           <Text style={styles.summaryAmount}>TMT 284.55</Text>
@@ -42,7 +55,26 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
         
-        {/* Täze Amallar */}
+        {showStats && (
+          <View style={styles.statsContainer}>
+            <View style={styles.statCard}>
+              <Gauge size={24} color="#3498db" />
+              <Text style={styles.statValue}>-12.5%</Text>
+              <Text style={styles.statLabel}>Elektrik tygşytlylygy</Text>
+            </View>
+            <View style={styles.statCard}>
+              <TrendingUp size={24} color="#2ecc71" />
+              <Text style={styles.statValue}>+5.2%</Text>
+              <Text style={styles.statLabel}>Suw tygşytlylygy</Text>
+            </View>
+            <View style={styles.statCard}>
+              <Wallet size={24} color="#f39c12" />
+              <Text style={styles.statValue}>TMT 45.20</Text>
+              <Text style={styles.statLabel}>Tygşytlanan pul</Text>
+            </View>
+          </View>
+        )}
+        
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Täze Amallar</Text>
           <View style={styles.quickActions}>
@@ -69,7 +101,6 @@ export default function HomeScreen() {
           </View>
         </View>
         
-        {/* Geljekdäki Tölegler */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Geljekdäki Tölegler</Text>
@@ -87,7 +118,6 @@ export default function HomeScreen() {
           ))}
         </View>
         
-        {/* Täze Amallar */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Täze Amallar</Text>
@@ -121,11 +151,16 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   summaryCard: {
-    backgroundColor: '#f39c12', // Güneş Energiýasy reňki (altyn we narpyz reňkini ýatda saklamak üçin)
+    backgroundColor: '#3498db',
     borderRadius: 16,
     padding: 24,
     marginBottom: 16,
     alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   summaryTitle: {
     color: 'rgba(255, 255, 255, 0.8)',
@@ -153,6 +188,36 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: '600',
   },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 4,
+    alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  statValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#2c3e50',
+    marginTop: 8,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#7f8c8d',
+    marginTop: 4,
+    textAlign: 'center',
+  },
   section: {
     marginTop: 24,
   },
@@ -168,7 +233,7 @@ const styles = StyleSheet.create({
     color: '#2c3e50',
   },
   seeAllText: {
-    color: '#f39c12', // Güneş enerjisi temasyndaky reňk
+    color: '#3498db',
     fontWeight: '600',
   },
   quickActions: {
