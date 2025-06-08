@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { StyleSheet } from 'react-native';
-import { Gauge, CreditCard, History as ClockHistory, User } from 'lucide-react-native';
+import { Home, CreditCard, History as ClockHistory, User } from 'lucide-react-native';
 
 export default function TabLayout() {
   return (
@@ -20,7 +20,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Baş sahypa',
-          tabBarIcon: ({ color, size }) => <Gauge size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen

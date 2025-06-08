@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type User = {
   id: string;
@@ -45,7 +44,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
   const loadAuthState = async () => {
     try {
-      const storedUser = await AsyncStorage.getItem('user');
+      // For web, use localStorage instead of AsyncStorage
+      const storedUser = localStorage.getItem('user');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
         setIsAuthenticated(true);
@@ -67,7 +67,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         avatar: 'https://images.pexels.com/photos/3943716/pexels-photo-3943716.jpeg?auto=compress&cs=tinysrgb&w=400',
       };
 
-      await AsyncStorage.setItem('user', JSON.stringify(mockUser));
+      localStorage.setItem('user', JSON.stringify(mockUser));
       setUser(mockUser);
       setIsAuthenticated(true);
     } catch (error) {
@@ -85,7 +85,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         avatar: 'https://images.pexels.com/photos/3943716/pexels-photo-3943716.jpeg?auto=compress&cs=tinysrgb&w=400',
       };
 
-      await AsyncStorage.setItem('user', JSON.stringify(newUser));
+      localStorage.setItem('user', JSON.stringify(newUser));
       setUser(newUser);
       setIsAuthenticated(true);
     } catch (error) {
@@ -95,7 +95,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
   const signOut = async () => {
     try {
-      await AsyncStorage.removeItem('user');
+      localStorage.removeItem('user');
       setUser(null);
       setIsAuthenticated(false);
     } catch (error) {
