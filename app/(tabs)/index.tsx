@@ -10,7 +10,7 @@ import RecentTransactionCard from '@/components/RecentTransactionCard';
 import AlertBanner from '@/components/AlertBanner';
 import UsageChart from '@/components/UsageChart';
 import { getBills, getRecentTransactions } from '@/utils/mockData';
-import { Bell, CreditCard, History, Settings, TrendingUp, Wallet, Calculator, PieChart, BarChart3, Zap, Droplets, Flame } from 'lucide-react-native';
+import { Bell, CreditCard, History, Settings, TrendingUp, Wallet, Calculator, ChartPie as PieChart, ChartBar as BarChart3, Zap, Droplets, Flame } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 

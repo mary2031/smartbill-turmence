@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowLeft, PieChart, TrendingUp, TrendingDown, Calendar, Target } from 'lucide-react-native';
+import { ArrowLeft, ChartPie as PieChart, TrendingUp, TrendingDown, Calendar, Target } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 

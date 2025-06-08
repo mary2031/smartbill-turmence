@@ -156,7 +156,7 @@ export default function Login() {
                 disabled={isLoading}
               >
                 {isLoading ? (
-                  <ActivityIndicator color="#ffffff" size="small" />
+                  <ActivityIndicator color="#ffffff\" size="small" />
                 ) : (
                   <Text style={styles.submitButtonText}>
                     {isLogin ? 'Girmek' : 'Hasap döret'}

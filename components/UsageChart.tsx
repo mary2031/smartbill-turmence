@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-import { TrendingUp, TrendingDown, BarChart3 } from 'lucide-react-native';
+import { TrendingUp, TrendingDown, ChartBar as BarChart3 } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 

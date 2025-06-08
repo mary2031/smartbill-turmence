@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { ArrowLeft, TrendingUp, Brain, AlertTriangle, Target, Calendar } from 'lucide-react-native';
+import { ArrowLeft, TrendingUp, Brain, TriangleAlert as AlertTriangle, Target, Calendar } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
