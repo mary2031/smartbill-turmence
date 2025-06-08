@@ -14,11 +14,6 @@ export default function ProfileScreen() {
     '2fa': false,
   });
   
-  // Return null if user is not loaded yet
-  if (!user) {
-    return null;
-  }
-  
   const handleToggle = (id: string) => {
     setToggleStates(prev => ({
       ...prev,

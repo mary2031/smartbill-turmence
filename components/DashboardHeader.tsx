@@ -8,15 +8,10 @@ type DashboardHeaderProps = {
     name: string;
     email: string;
     avatar: string;
-  } | null;
+  };
 };
 
 export default function DashboardHeader({ user }: DashboardHeaderProps) {
-  // Return null if user is not available
-  if (!user) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>

@@ -6,41 +6,38 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#3498db',
-        tabBarInactiveTintColor: '#95a5a6',
+        tabBarActiveTintColor: '#3498db', // işjeň tab üçin reňk
+        tabBarInactiveTintColor: '#95a5a6', // işjeň däl tab üçin reňk
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
-        headerShown: false,
-        tabBarHideOnKeyboard: true,
-        tabBarShowLabel: true,
-        tabBarAllowFontScaling: false,
+        headerShown: false, // sahypanyň ýokarky başlygynyň görkezilmezligi
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Baş sahypa',
+          title: 'Baş sahypa', // "Home" -> "Baş sahypa"
           tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="bills"
         options={{
-          title: 'Hasaplar',
+          title: 'Hasaplar', // "Bills" -> "Hasaplar"
           tabBarIcon: ({ color, size }) => <CreditCard size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
-          title: 'Geçmiş',
+          title: 'Geçmiş', // "History" -> "Geçmiş"
           tabBarIcon: ({ color, size }) => <ClockHistory size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profil',
+          title: 'Profil', // "Profile" -> "Profil"
           tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
         }}
       />
@@ -50,21 +47,14 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff', // Tab paneliniň fon reňki
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-    height: 65,
-    paddingBottom: 10,
-    paddingTop: 10,
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    height: 60,
+    paddingBottom: 6,
   },
   tabBarLabel: {
     fontSize: 12,
-    fontWeight: '600',
-    marginTop: 4,
+    fontWeight: '500',
   },
 });
